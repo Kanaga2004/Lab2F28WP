@@ -6,21 +6,21 @@ function start() {
     document.addEventListener("keydown", moveBear, false);
     //create new array for bees
     bees = new Array();
-
     //create bees
     makeBees();
     updateBees();
     document.addEventListener("keydown", lastStingTime = new Date());
    }
+
    
 function Bear() {
-    this.dBear = 100;
+    this.dBear=document.getElementById("speedBear").value;
     this.htmlElement = document.getElementById("bear");
     this.id = this.htmlElement.id;
     this.x = this.htmlElement.offsetLeft;
     this.y = this.htmlElement.offsetTop;
-
     this.move = function(xDir, yDir) {
+    this.dBear=setSpeed();
     this.fitBounds(); //we add this instruction to keep bear within board
     this.x += this.dBear * xDir;
     this.y += this.dBear * yDir;
@@ -67,14 +67,14 @@ function moveBear(e) {
     if (e.keyCode == KEYDOWN) {
     bear.move(0, 1)
     } // down key
-    setSpeed();
+    
    }
- function setSpeed(){
-    let speed = document.getElementById("speedBear").value;
+function setSpeed(){
+    return document.getElementById("speedBear").value;
 }
 class Bee {
     constructor(beeNumber) {
-    //the HTML element corresponding to the IMG of the bee
+   //the HTML element corresponding to the IMG of the bee
     this.htmlElement = createBeeImg(beeNumber);
     //iits HTML ID
     this.id = this.htmlElement.id;
@@ -179,17 +179,20 @@ class Bee {
     let period = document.getElementById("periodTimer").value;;//modify this to control refresh period
     let score= hits.innerHTML;
     //update the timer for the next move
-    function updateTimer(){
-      if (score==100){
-       clearTimeout(indicator);
-       alert('GAME OVER!');
-       restart();
-      } else{
-        indicator= setTimeout(function(){updateBees()},period);
-      } 
-    }
-    updateTimer()
+    UpdateTimer();
    }
+   function UpdateTimer(){
+    let period = document.getElementById("periodTimer").value;;//modify this to control refresh period
+    let score= hits.innerHTML;
+    if (score==100){
+      alert('GAME OVER!');
+      clearTimeout(indicator);
+      restart();
+     } else{
+       indicator= setTimeout('updateBees()',period);
+     }
+   }
+   
    function isHit(defender, offender) {
     if (overlap(defender, offender)) { //check if the two image overlap
     let score = hits.innerHTML;
@@ -233,6 +236,12 @@ class Bee {
    }
   function restart(){
     hits.innerHTML=0;
-
-    start()
+    location.reload();
+  }
+  function AddBee(){
+    let nbees=document.getElementById("nbBees").value;
+    var bee= new Bee(Number(nbees)+1);
+    bee.display();
+    bees.push(bee);
+    document.getElementById("nbBees").value=Number(nbees)+1;
   }
